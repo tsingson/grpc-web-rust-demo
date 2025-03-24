@@ -1,27 +1,27 @@
 use std::{pin::Pin, time::Duration};
 
+use crate::{
+  api::{user_server::User, Empty, GetUserRequest, StreamListRequest, UpdateUserRequest, UserDto},
+  utils::now_millis,
+};
 use tokio::sync::mpsc;
 use tokio_stream::{wrappers::ReceiverStream, Stream, StreamExt};
-use crate::api::{GetUserRequest, StreamListRequest, UpdateUserRequest, UserDto};
-use crate::api::Empty;
-use crate::api::user_server::User;
-use crate::utils::now_millis;
 
 pub struct UserService;
 
 #[tonic::async_trait]
 impl User for UserService {
+  type StreamListStream = Pin<Box<dyn Stream<Item = Result<UserDto, tonic::Status>> + Send>>;
+
   async fn get(&self, request: tonic::Request<GetUserRequest>) -> Result<tonic::Response<UserDto>, tonic::Status> {
     let req = request.into_inner();
     println!("The get user request: {:?}", req);
 
-    Ok(tonic::Response::new(UserDto {
-      id: req.id,
-      email: "test@example.com".to_string(),
-      name: Some("Test User".to_string()),
-      status: 1,
-      ctime: now_millis(),
-    }))
+    Ok(tonic::Response::new(UserDto { id: req.id,
+                                      email: "test@example.com".to_string(),
+                                      name: Some("Test User".to_string()),
+                                      status: 1,
+                                      ctime: now_millis() }))
   }
 
   async fn update(&self, request: tonic::Request<UpdateUserRequest>) -> Result<tonic::Response<Empty>, tonic::Status> {
@@ -30,23 +30,18 @@ impl User for UserService {
     Ok(tonic::Response::new(Empty::default()))
   }
 
-  type StreamListStream = Pin<Box<dyn Stream<Item = Result<UserDto, tonic::Status>> + Send>>;
-
-  async fn stream_list(
-    &self,
-    request: tonic::Request<StreamListRequest>,
-  ) -> Result<tonic::Response<Self::StreamListStream>, tonic::Status> {
+  async fn stream_list(&self,
+                       request: tonic::Request<StreamListRequest>)
+                       -> Result<tonic::Response<Self::StreamListStream>, tonic::Status> {
     println!("UserService::stream_list");
     println!("\tclient connected from: {:?}", request.remote_addr());
 
     // 定义一个无限迭代器
-    let repeat = std::iter::repeat_with(|| UserDto {
-      id: 1,
-      email: "yangbajing@gmail.com".to_string(),
-      status: 1,
-      ctime: now_millis(),
-      ..Default::default()
-    });
+    let repeat = std::iter::repeat_with(|| UserDto { id: 1,
+                                                     email: "yangbajing@gmail.com".to_string(),
+                                                     status: 1,
+                                                     ctime: now_millis(),
+                                                     ..Default::default() });
     // 使用 repeat iter 创建一个流，并添加一个节流器控制每隔 5 秒发送一个元素
     let mut stream = Box::pin(tokio_stream::iter(repeat).throttle(Duration::from_secs(5)));
 
