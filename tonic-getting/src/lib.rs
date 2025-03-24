@@ -1,3 +1,6 @@
 pub mod grpc;
-pub mod pb;
+
+pub mod api;
 mod utils;
+#[global_allocator]
+static GLOBAL: jemallocator::Jemalloc = jemallocator::Jemalloc;

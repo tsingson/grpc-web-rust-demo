@@ -1,5 +1,5 @@
 syntax = "proto3";
 
-package getting;
+package proto.getting.v1;
 
 message Empty {}

@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package getting.common;
+package proto.getting.v1;
 
 message Pagination {
   int64 page = 1;

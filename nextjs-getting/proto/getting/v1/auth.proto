@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package getting.v1;
+package proto.getting.v1;
 
 service Auth {
   rpc Signin(SigninRequest) returns (SigninResponse) {}

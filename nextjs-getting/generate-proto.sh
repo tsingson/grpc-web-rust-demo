@@ -9,6 +9,4 @@ protoc \
     --ts_proto_out=${OUT_DIR} \
     --ts_proto_opt=outputServices=nice-grpc,outputServices=generic-definitions,useExactTypes=false \
     -I ${PROTO_DIR} \
-    ${PROTO_DIR}/getting/*.proto \
-    ${PROTO_DIR}/getting/common/*.proto \
     ${PROTO_DIR}/getting/v1/*.proto

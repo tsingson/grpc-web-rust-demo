@@ -1,10 +1,9 @@
 use tonic::service::{Routes, RoutesBuilder};
 
-use crate::pb::getting::v1::{auth_server::AuthServer, user_server::UserServer};
-
 mod auth;
 mod user;
 
+use crate::api::api::{auth_server::AuthServer, user_server::UserServer};
 pub use auth::AuthService;
 pub use user::UserService;
 
@@ -18,12 +17,11 @@ pub fn make_grpc_routes() -> Routes {
 }
 
 pub fn auth_interceptor(request: tonic::Request<()>) -> Result<tonic::Request<()>, tonic::Status> {
-  let authorization = request
-    .metadata()
-    .get("authorization")
-    .ok_or_else(|| tonic::Status::unauthenticated("No auth token provided"))?
-    .to_str()
-    .map_err(|e| tonic::Status::unauthenticated(e.to_string()))?;
+  let authorization = request.metadata()
+                             .get("authorization")
+                             .ok_or_else(|| tonic::Status::unauthenticated("No auth token provided"))?
+                             .to_str()
+                             .map_err(|e| tonic::Status::unauthenticated(e.to_string()))?;
   let token = &authorization["Berere ".len()..];
   if token != SESSION_TOKEN {
     return Err(tonic::Status::unauthenticated("Invalid auth token"));
