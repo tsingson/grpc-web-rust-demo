@@ -2,14 +2,10 @@ use std::{pin::Pin, time::Duration};
 
 use tokio::sync::mpsc;
 use tokio_stream::{wrappers::ReceiverStream, Stream, StreamExt};
-
-use crate::{
-  pb::getting::{
-    v1::{user_server::User, GetUserRequest, StreamListRequest, UpdateUserRequest, UserDto},
-    Empty,
-  },
-  utils::now_millis,
-};
+use crate::api::{GetUserRequest, StreamListRequest, UpdateUserRequest, UserDto};
+use crate::api::Empty;
+use crate::api::user_server::User;
+use crate::utils::now_millis;
 
 pub struct UserService;
 

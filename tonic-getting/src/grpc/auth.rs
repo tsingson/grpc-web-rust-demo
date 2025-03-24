@@ -1,7 +1,6 @@
-use crate::{
-  grpc::SESSION_TOKEN,
-  pb::getting::v1::{auth_server::Auth, SigninRequest, SigninResponse, SignupRequest, SignupResponse, TokenType},
-};
+use crate::api::auth_server::Auth;
+use crate::api::{SigninRequest, SigninResponse, SignupRequest, SignupResponse, TokenType};
+use crate::grpc::SESSION_TOKEN;
 
 pub struct AuthService;
 

@@ -1,12 +1,13 @@
 use tonic::service::{Routes, RoutesBuilder};
 
-use crate::pb::getting::v1::{auth_server::AuthServer, user_server::UserServer};
-
+ 
 mod auth;
 mod user;
 
 pub use auth::AuthService;
 pub use user::UserService;
+use crate::api::auth_server::AuthServer;
+use crate::api::user_server::UserServer;
 
 static SESSION_TOKEN: &str = "L1AhTRgFMiTkQMuGf8PnY6yHAmaV72ESQsEzo0cVWmiodIEx";
 
